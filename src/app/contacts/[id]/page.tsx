@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { Tab } from '@headlessui/react';
 import {
   ArrowLeftIcon,
   PencilIcon,
@@ -198,35 +199,42 @@ export default function ContactDetailPage() {
           </div>
         </motion.div>
 
-        {/* Tab Navigation */}
-        <div className="mb-8">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+        {/* Tabs */}
+        <Tab.Group
+          selectedIndex={["overview","interviews","interactions","attachments"].indexOf(activeTab)}
+          onChange={(index) => setActiveTab((['overview','interviews','interactions','attachments'][index]) as typeof activeTab)}
+        >
+          <div className="mb-8">
+            <Tab.List className="flex space-x-6 border-b border-gray-200">
               {[
                 { id: 'overview', name: 'Overview', icon: BuildingOfficeIcon },
                 { id: 'interviews', name: 'Interviews', icon: CalendarDaysIcon },
                 { id: 'interactions', name: 'Interactions', icon: ChatBubbleLeftRightIcon },
                 { id: 'attachments', name: 'Attachments', icon: DocumentArrowDownIcon }
-              ].map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as 'overview' | 'interviews' | 'interactions')}
-                    className={`flex items-center gap-2 py-2 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === tab.id
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
-                    {tab.name}
-                  </button>
-                );
-              })}
-            </nav>
+              ].map((t) => (
+                <Tab key={t.id} className={({ selected }) => `-mb-px inline-flex items-center gap-2 border-b-2 py-2 px-1 text-sm font-medium focus:outline-none ${selected ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>
+                  <t.icon className="h-5 w-5" />
+                  {t.name}
+                </Tab>
+              ))}
+            </Tab.List>
           </div>
-        </div>
+
+          <Tab.Panels>
+            <Tab.Panel>
+              {/* Overview content will render below based on activeTab */}
+            </Tab.Panel>
+            <Tab.Panel>
+              {/* Interviews content marker */}
+            </Tab.Panel>
+            <Tab.Panel>
+              {/* Interactions content marker */}
+            </Tab.Panel>
+            <Tab.Panel>
+              {/* Attachments content marker */}
+            </Tab.Panel>
+          </Tab.Panels>
+        </Tab.Group>
 
         {/* Content */}
         <motion.div

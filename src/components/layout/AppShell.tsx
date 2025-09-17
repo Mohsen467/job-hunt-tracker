@@ -9,7 +9,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar */}
       <Dialog open={sidebarOpen} onClose={setSidebarOpen} className="lg:hidden">
         <DialogBackdrop className="fixed inset-0 bg-black/40" />
