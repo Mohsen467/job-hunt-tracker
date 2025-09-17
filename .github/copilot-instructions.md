@@ -2,6 +2,11 @@
 
 This Next.js application helps track job applications, contacts, interviews, and follow-ups for job seekers in the game development industry.
 
+## Package Manager
+- Use pnpm for all dependency management and scripts
+- Do not use npm or yarn
+- Install dependencies: `pnpm install`
+
 ## Project Structure
 - `/src/app` - Next.js App Router pages and API routes
 - `/src/components` - Reusable UI components
@@ -30,10 +35,21 @@ This Next.js application helps track job applications, contacts, interviews, and
 - `DELETE /api/contacts/[id]` - Delete contact
 
 ## Development Workflow
-- Run `npm run dev` for development server (http://localhost:3000)
+- Run `pnpm dev` for development server (http://localhost:3000)
 - Data persisted in `/data/contacts.json`
 - TypeScript strict mode enabled
 - Real-time data operations through API routes
+
+## Code Quality & Build Process ⚠️ IMPORTANT
+Use pnpm for all scripts.
+
+**ALWAYS run build and lint validation after making code changes:**
+1. Run `pnpm build` to check for TypeScript compilation errors
+2. Run `pnpm lint` to verify code quality and style
+3. Fix any errors or warnings before completing work
+4. Ensure the application compiles successfully before submitting changes
+
+**Build validation is REQUIRED for every code change to maintain production readiness.**
 
 ## Current Status: Foundation Complete ✅
 - [x] Next.js workspace with TypeScript and Tailwind
@@ -41,6 +57,7 @@ This Next.js application helps track job applications, contacts, interviews, and
 - [x] JSON-based data persistence layer
 - [x] RESTful API endpoints
 - [x] Development server running
+- [x] Build and lint validation working
 - [ ] UI components and pages
 - [ ] Contact management interface
 - [ ] Interview tracking features

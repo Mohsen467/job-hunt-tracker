@@ -3,54 +3,45 @@
 export interface JobContact {
   id: string;
   companyName: string;
-  contactPerson?: string;
+  positionTitle: string;
+  department?: string;
+  contactName?: string;
   contactEmail?: string;
-  contactMethod: ContactMethod;
-  position: string;
+  contactPhone?: string;
+  companyWebsite?: string;
   jobPostingUrl?: string;
   salaryRange?: string;
   location: string;
   workType: WorkType;
   applicationDeadline?: string;
-  dateContacted: string;
-  lastContactDate: string;
+  dateAdded: string;
   status: JobStatus;
-  followUpDate?: string;
   priority: Priority;
-  notes: string;
-  archived: boolean;
-  createdAt: string;
-  updatedAt: string;
+  notes?: string;
   
   // Related data
-  interviews: Interview[];
-  interactions: Interaction[];
-  attachments: Attachment[];
+  interviews?: Interview[];
+  interactions?: Interaction[];
+  attachments?: Attachment[];
 }
 
 export interface Interview {
   id: string;
-  contactId: string;
-  type: InterviewType;
+  round: string;
+  type: string;
+  status: 'Scheduled' | 'Completed' | 'Cancelled';
   scheduledDate: string;
-  duration?: number; // minutes
-  interviewers: string[];
-  status: InterviewStatus;
-  notes: string;
+  interviewerName?: string;
+  interviewerTitle?: string;
+  notes?: string;
   feedback?: string;
-  nextSteps?: string;
-  createdAt: string;
 }
 
 export interface Interaction {
   id: string;
-  contactId: string;
   date: string;
-  type: InteractionType;
-  description: string;
-  outcome?: string;
-  nextAction?: string;
-  createdAt: string;
+  type: string;
+  notes: string;
 }
 
 export interface Attachment {
@@ -80,18 +71,13 @@ export type WorkType =
 
 export type JobStatus = 
   | 'To Contact'
-  | 'Application Sent' 
-  | 'Waiting Reply'
-  | 'Phone Screen Scheduled'
-  | 'Phone Screen Completed'
+  | 'Contacted'
   | 'Interview Scheduled'
-  | 'Interview Completed'
-  | 'Final Interview'
+  | 'Interviewed'
+  | 'Follow-up Needed'
   | 'Offer Received'
-  | 'Offer Negotiating'
   | 'Offer Accepted'
   | 'Rejected'
-  | 'Withdrawn'
   | 'Archived';
 
 export type Priority = 'High' | 'Medium' | 'Low';

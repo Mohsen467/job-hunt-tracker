@@ -19,7 +19,7 @@ export async function GET(
 
     return NextResponse.json({ 
       success: true, 
-      data: contact 
+      contact: contact 
     });
   } catch (error) {
     console.error('Error fetching contact:', error);
@@ -39,18 +39,18 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
     
-    const updatedContact = await JobContactsDB.updateContact(id, body);
+    const contact = await JobContactsDB.updateContact(id, body);
     
-    if (!updatedContact) {
+    if (!contact) {
       return NextResponse.json(
         { success: false, error: 'Contact not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      data: updatedContact 
+    return NextResponse.json({
+      success: true,
+      contact
     });
   } catch (error) {
     console.error('Error updating contact:', error);
