@@ -1,0 +1,35 @@
+{
+  "name": "job-hunt-tracker",
+  "version": "1.0.0",
+  "description": "A Next.js app for tracking job applications, contacts, and interviews",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [
+    "job-search",
+    "tracker",
+    "nextjs"
+  ],
+  "author": "Mohsen Sadeghi",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^15.5.3",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^24.5.1",
+    "@types/react": "^19.1.13",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.35.0",
+    "eslint-config-next": "^15.5.3",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.9.2"
+  }
+}
