@@ -173,7 +173,7 @@ const ContactsListPage = () => {
         {/* Contacts Grid */}
         <AnimatePresence>
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6 md:mt-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 md:mt-8"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
