@@ -1,5 +1,5 @@
-import { JobContact } from '@/types';
 "use client";
+import { JobContact } from '@/types';
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -36,7 +36,10 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 }
 };
 
-export default function ContactsPage() {
+// Redesigning the contacts list page
+// Adding filters, search functionality, and list/grid card layouts
+
+const ContactsListPage = () => {
   const [contacts, setContacts] = useState<JobContact[]>([]);
   const [filteredContacts, setFilteredContacts] = useState<JobContact[]>([]);
   const [loading, setLoading] = useState(true);
@@ -120,10 +123,10 @@ export default function ContactsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-        <Card className="p-6 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+  <Card className="p-4 md:p-6 bg-white/80 backdrop-blur-sm border-0 shadow-lg z-20 sticky top-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative z-20">
             <div className="relative">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <Input
@@ -134,11 +137,11 @@ export default function ContactsPage() {
               />
             </div>
             <Listbox value={statusFilter} onChange={setStatusFilter}>
-              <div className="relative">
-                <Listbox.Button className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+              <div className="relative z-30">
+                <Listbox.Button className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm relative z-30">
                   {statusOptions.find((o) => o.value === statusFilter)?.label}
                 </Listbox.Button>
-                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <Listbox.Options className="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                   {statusOptions.map((option) => (
                     <Listbox.Option
                       key={option.value}
@@ -170,7 +173,7 @@ export default function ContactsPage() {
         {/* Contacts Grid */}
         <AnimatePresence>
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6 md:mt-8"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -205,7 +208,9 @@ export default function ContactsPage() {
       </div>
     </div>
   );
-}
+};
+
+export default ContactsListPage;
 
 // function getStatusProgress(status: string): number {
 //   const progressMap = {
