@@ -1,48 +1,36 @@
-'use client';
+import { JobContact } from '@/types';
+"use client";
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  MagnifyingGlassIcon, 
-  FunnelIcon, 
-  PlusIcon,
-  UserGroupIcon,
-  BuildingOfficeIcon,
-  CalendarDaysIcon,
-  EyeIcon,
-  PencilIcon,
-  TrashIcon
-} from '@heroicons/react/24/outline';
-import { JobContact } from '@/types';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { Listbox } from '@headlessui/react';
+// import Link from 'next/link';
+// import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { StatusBadge } from '@/components/ui/StatusBadge';
 import { EmptyState } from '@/components/ui/EmptyState';
-import Link from 'next/link';
+import { ContactListItem } from '@/components/ui/ContactListItem';
 
 const statusColors = {
-  'To Contact': 'gray',
-  'Contacted': 'blue',
-  'Interview Scheduled': 'yellow',
-  'Interviewed': 'purple',
+  'To Contact': 'blue',
+  'Contacted': 'yellow',
+  'Interview Scheduled': 'purple',
+  'Interviewed': 'indigo',
   'Follow-up Needed': 'orange',
   'Offer Received': 'green',
   'Offer Accepted': 'emerald',
   'Rejected': 'red',
-  'Archived': 'slate'
+  'Archived': 'slate',
 } as const;
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
+    transition: { staggerChildren: 0.1 }
   }
 };
-
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 }
@@ -54,7 +42,11 @@ export default function ContactsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'date' | 'company' | 'position'>('date');
+  const statusOptions = [
+    { value: 'all', label: 'All Statuses' },
+    ...Object.keys(statusColors).map((status) => ({ value: status, label: status }))
+  ];
+  // const [sortBy, setSortBy] = useState<'date' | 'company' | 'position'>('date');
 
   const fetchContacts = async () => {
     try {
@@ -74,38 +66,18 @@ export default function ContactsPage() {
         contact.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         contact.positionTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
         contact.contactName?.toLowerCase().includes(searchTerm.toLowerCase());
-      
       const matchesStatus = statusFilter === 'all' || contact.status === statusFilter;
-      
       return matchesSearch && matchesStatus;
     });
-
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'company':
-          return a.companyName.localeCompare(b.companyName);
-        case 'position':
-          return a.positionTitle.localeCompare(b.positionTitle);
-        case 'date':
-        default:
-          return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime();
-      }
-    });
-
+    filtered.sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
     setFilteredContacts(filtered);
-  }, [contacts, searchTerm, statusFilter, sortBy]);
+  }, [contacts, searchTerm, statusFilter]);
 
-  useEffect(() => {
-    fetchContacts();
-  }, []);
-
-  useEffect(() => {
-    filterAndSortContacts();
-  }, [filterAndSortContacts]);
+  useEffect(() => { fetchContacts(); }, []);
+  useEffect(() => { filterAndSortContacts(); }, [filterAndSortContacts]);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this contact?')) return;
-
     try {
       await fetch(`/api/contacts/${id}`, { method: 'DELETE' });
       setContacts(contacts.filter(c => c.id !== id));
@@ -114,26 +86,17 @@ export default function ContactsPage() {
     }
   };
 
-  const getStatusBadgeColor = (status: string) => {
-    return statusColors[status as keyof typeof statusColors] || 'gray';
-  };
-
-  const getNextAction = (contact: JobContact) => {
-    switch (contact.status) {
-      case 'To Contact':
-        return 'Send initial contact';
-      case 'Contacted':
-        return 'Wait for response';
-      case 'Interview Scheduled':
-        return 'Prepare for interview';
-      case 'Interviewed':
-        return 'Send thank you note';
-      case 'Follow-up Needed':
-        return 'Follow up with contact';
-      default:
-        return 'No action needed';
-    }
-  };
+  // const getStatusBadgeColor = (status: string) => statusColors[status as keyof typeof statusColors] || 'gray';
+  // const getNextAction = (contact: JobContact) => {
+  //   switch (contact.status) {
+  //     case 'To Contact': return 'Send initial contact';
+  //     case 'Contacted': return 'Wait for response';
+  //     case 'Interview Scheduled': return 'Prepare for interview';
+  //     case 'Interviewed': return 'Send thank you note';
+  //     case 'Follow-up Needed': return 'Follow up with contact';
+  //     default: return 'No action needed';
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -159,170 +122,66 @@ export default function ContactsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <UserGroupIcon className="h-8 w-8 text-blue-600" />
-                Job Contacts
-              </h1>
-              <p className="text-gray-600 mt-2">
-                Manage your job applications and track progress
-              </p>
+        <Card className="p-6 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="relative">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Input
+                placeholder="Search contacts..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
             </div>
-            <Link href="/contacts/add">
-              <Button size="lg" className="shadow-lg">
-                <PlusIcon className="h-5 w-5 mr-2" />
-                Add Contact
-              </Button>
-            </Link>
-          </div>
-
-          {/* Filters and Search */}
-          <Card className="p-6 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Listbox value={statusFilter} onChange={setStatusFilter}>
               <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <Input
-                  placeholder="Search contacts..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+                <Listbox.Button className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                  {statusOptions.find((o) => o.value === statusFilter)?.label}
+                </Listbox.Button>
+                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {statusOptions.map((option) => (
+                    <Listbox.Option
+                      key={option.value}
+                      value={option.value}
+                      className={({ active }) =>
+                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-blue-100 text-blue-900' : 'text-gray-900'
+                        }`
+                      }
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>{option.label}</span>
+                          {selected ? (
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
+                              <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                            </span>
+                          ) : null}
+                        </>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
               </div>
-              
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              >
-                <option value="all">All Statuses</option>
-                {Object.keys(statusColors).map(status => (
-                  <option key={status} value={status}>{status}</option>
-                ))}
-              </select>
-
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as 'date' | 'company' | 'position')}
-                className="rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              >
-                <option value="date">Sort by Date</option>
-                <option value="company">Sort by Company</option>
-                <option value="position">Sort by Position</option>
-              </select>
-
-              <div className="flex items-center text-sm text-gray-500">
-                <FunnelIcon className="h-4 w-4 mr-2" />
-                {filteredContacts.length} of {contacts.length} contacts
-              </div>
-            </div>
-          </Card>
-        </motion.div>
+            </Listbox>
+          </div>
+        </Card>
 
         {/* Contacts Grid */}
         <AnimatePresence>
           <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+            exit="hidden"
           >
             {filteredContacts.map((contact) => (
               <motion.div key={contact.id} variants={itemVariants} layout>
-                <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white/90 backdrop-blur-sm overflow-hidden">
-                  <div className="p-6">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-lg group-hover:text-blue-600 transition-colors">
-                          {contact.companyName}
-                        </h3>
-                        <p className="text-gray-600 font-medium">
-                          {contact.positionTitle}
-                        </p>
-                        {contact.contactName && (
-                          <p className="text-sm text-gray-500 mt-1">
-                            Contact: {contact.contactName}
-                          </p>
-                        )}
-                      </div>
-                      <StatusBadge color={getStatusBadgeColor(contact.status)}>
-                        {contact.status}
-                      </StatusBadge>
-                    </div>
-
-                    {/* Info Grid */}
-                    <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-                      <div className="flex items-center text-gray-600">
-                        <BuildingOfficeIcon className="h-4 w-4 mr-2" />
-                        {contact.department || 'N/A'}
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <CalendarDaysIcon className="h-4 w-4 mr-2" />
-                        {new Date(contact.dateAdded).toLocaleDateString()}
-                      </div>
-                    </div>
-
-                    {/* Next Action */}
-                    <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-                      <p className="text-sm font-medium text-blue-800">
-                        Next Action:
-                      </p>
-                      <p className="text-sm text-blue-600">
-                        {getNextAction(contact)}
-                      </p>
-                    </div>
-
-                    {/* Stats */}
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                      <span>
-                        {contact.interviews?.length || 0} interviews
-                      </span>
-                      <span>
-                        {contact.interactions?.length || 0} interactions
-                      </span>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-2">
-                      <Link href={`/contacts/${contact.id}`} className="flex-1">
-                        <Button variant="outline" size="sm" className="w-full">
-                          <EyeIcon className="h-4 w-4 mr-2" />
-                          View
-                        </Button>
-                      </Link>
-                      <Link href={`/contacts/${contact.id}/edit`}>
-                        <Button variant="outline" size="sm">
-                          <PencilIcon className="h-4 w-4" />
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(contact.id)}
-                        className="text-red-600 hover:bg-red-50 hover:border-red-200"
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="h-1 bg-gray-100">
-                    <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500"
-                      style={{
-                        width: `${getStatusProgress(contact.status)}%`
-                      }}
-                    />
-                  </div>
-                </Card>
+                <ContactListItem
+                  contact={contact}
+                  onDelete={() => handleDelete(contact.id)}
+                />
               </motion.div>
             ))}
           </motion.div>
@@ -348,17 +207,17 @@ export default function ContactsPage() {
   );
 }
 
-function getStatusProgress(status: string): number {
-  const progressMap = {
-    'To Contact': 10,
-    'Contacted': 25,
-    'Interview Scheduled': 50,
-    'Interviewed': 70,
-    'Follow-up Needed': 60,
-    'Offer Received': 90,
-    'Offer Accepted': 100,
-    'Rejected': 0,
-    'Archived': 0
-  };
-  return progressMap[status as keyof typeof progressMap] || 0;
-}
+// function getStatusProgress(status: string): number {
+//   const progressMap = {
+//     'To Contact': 10,
+//     'Contacted': 25,
+//     'Interview Scheduled': 50,
+//     'Interviewed': 70,
+//     'Follow-up Needed': 60,
+//     'Offer Received': 90,
+//     'Offer Accepted': 100,
+//     'Rejected': 0,
+//     'Archived': 0
+//   };
+//   return progressMap[status as keyof typeof progressMap] || 0;
+// }

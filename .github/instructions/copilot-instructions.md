@@ -7,3 +7,10 @@
 4. Ensure the application compiles successfully before submitting changes
 
 **Build and lint validation are REQUIRED for every code change to maintain production readiness. Do NOT skip these steps.**
+
+## File Organization & Maintainability
+
+**Always break down code if a class or file becomes too long.**
+- Avoid having hundreds of lines in a single file when it can be split into smaller components or modules.
+- Refactor large files into multiple, logically organized files to improve maintainability, debugging, and code review.
+- Smaller files and components are easier to test, understand, and update.
