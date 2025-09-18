@@ -19,6 +19,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.8",
     "@heroicons/react": "^2.2.0",
+    "@next/codemod": "15.6.0-canary.12",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.13",
     "lucide-react": "^0.544.0",
