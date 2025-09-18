@@ -125,7 +125,7 @@ const ContactsListPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-  <Card className="p-4 md:p-6 bg-white/80 backdrop-blur-sm border-0 shadow-lg z-20 sticky top-4">
+        <Card className="p-4 md:p-6 bg-white/80 backdrop-blur-sm border-0 shadow-lg z-20 lg:sticky lg:top-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative z-20">
             <div className="relative">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -138,7 +138,7 @@ const ContactsListPage = () => {
             </div>
             <Listbox value={statusFilter} onChange={setStatusFilter}>
               <div className="relative z-30">
-                <Listbox.Button className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm relative z-30">
+                <Listbox.Button className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                   {statusOptions.find((o) => o.value === statusFilter)?.label}
                 </Listbox.Button>
                 <Listbox.Options className="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
